@@ -12,3 +12,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+Route::view('/', 'layout');
+Route::view('/login', 'login');
+Route::view('/', 'layout');
+Route::view('/', 'layout');
