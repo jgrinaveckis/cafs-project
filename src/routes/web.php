@@ -13,8 +13,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
-Route::view('/', 'layout');
-Route::view('/login', 'login');
-Route::view('/', 'layout');
-Route::view('/', 'layout');
+     Route::get('/', [HomeController::class, 'home'])->name('home');
+    /**
+     * Routes for authorized user
+     */
+     Route::group(['middleware' => ['auth']], function() {
+        Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+    });
+
+    /**
+     * Routes for guest (un-auth) user
+     */
+    Route::group(['middleware' => ['guest']], function() {
+
+        Route::get('/register', [RegistrationController::class, 'show'])->name('register_show');
+        Route::post('/register', [RegistrationController::class, 'register'])->name('register');
+
+        Route::get('/login', [LoginController::class, 'show'])->name('login_show');
+        Route::post('/login', [LoginController::class, 'login'])->name('login');
+    });
+});

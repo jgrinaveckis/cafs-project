@@ -8,11 +8,13 @@ use App\Http\Requests\RegistrationRequest;
 
 class RegistrationController extends Controller
 {
+
     public function show() {
+
         return view('register');
     }
 
-    public function registration(RegistrationRequest $request) {
+    public function register(RegistrationRequest $request) {
         
         $user = User::create($request->validated());
         auth()->login($user);

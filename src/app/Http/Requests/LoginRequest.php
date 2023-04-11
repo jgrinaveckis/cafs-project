@@ -30,21 +30,22 @@ class LoginRequest extends FormRequest
 
     public function getCreds() {
 
-        $username = $this->get('username');
-        if($this->isEmail($username)) {
+        $email = $this->input('email');
+        if($this->isUsername($email)) {
             return [
-                'email' => $username,
-                'password' => $this->get('password')
+                'username' => $email,
+                'password' => $this->input('password')
             ]
         }
         return $this->only('username', 'password');
     }
 
-    protected function isEmail($field) {
+    protected function isUsername($field) {
         //think if actually this validation and username stuff is needed at all
         $validator = $this->container->make(ValidationFactory::class);
-        return ! $validator->make(
-            ['username' => $field],['username' => 'email']
+        return !$validator->make(
+            ['username' => $field],
+            ['username' => 'email']
         )->fails();
     }
 }
