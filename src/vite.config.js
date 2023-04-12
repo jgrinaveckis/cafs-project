@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import path from 'path'
 
 export default defineConfig({
     plugins: [
@@ -8,13 +9,16 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    server: { 
-        https: false,
-        host: true,
+    resolve: {
+        alias: {
+            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+        }
+    },
+    server: {
+        host: '0.0.0.0',
         port: 3001,
         hmr: {
-            host: 'localhost',
-            protocol: 'ws'
+            host: 'localhost'
         },
     },
 });

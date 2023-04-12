@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------

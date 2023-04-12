@@ -11,7 +11,7 @@ class RegistrationController extends Controller
 
     public function show() {
 
-        return view('register');
+        return view('auth.register');
     }
 
     public function register(RegistrationRequest $request) {
