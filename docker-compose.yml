@@ -38,12 +38,12 @@ services:
     
     npm:
         image: node:17
-        build: ./docker/node
         container_name: npm
-        volumes:
-            - ./src:/var/www
-        ports:
-            - 3001:3001
         working_dir: /var/www/
+        volumes:
+        - ./src:/var/www/
+        ports:
+        - 3001:3001
+        entrypoint: ["/bin/sh", "-c", "chmod -R 777 . && npm install && npm run dev"]
         networks:
-            - laravel
+        - laravel

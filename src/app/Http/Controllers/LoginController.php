@@ -12,8 +12,8 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(LoginRequest $req) {
-        $creds = $req->getCreds();
+    public function login(LoginRequest $request) {
+        $creds = $request->getCreds();
 
         if(!Auth::validate($creds)):
             return redirect()->to('login')->withErrors(trans('auth.failed'));
@@ -22,10 +22,10 @@ class LoginController extends Controller
         $user = Auth::getProvider()->retrievedByCredentials($creds);
         Auth::login($user);
 
-        return $this->userAuthenticated($req, $user);
+        return $this->userAuthenticated($request, $user);
     }
 
-    protected function userAuthenticated(Request $req, $user) {
+    protected function userAuthenticated(Request $request, $user) {
         return redirect()->intended();
     }
 }
