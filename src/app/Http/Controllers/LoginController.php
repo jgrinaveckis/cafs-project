@@ -9,16 +9,18 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     public function show() {
-        return view('auth.login');
+        return view('home');
     }
 
     public function login(LoginRequest $request) {
+
         $creds = $request->getCreds();
 
         if(!Auth::validate($creds)):
-            return redirect()->to('login')->withErrors(trans('auth.failed'));
+            return redirect('/')->with('error', "User cant be authorised");
         endif;
-
+        
+        #retrieve user
         $user = Auth::getProvider()->retrievedByCredentials($creds);
         Auth::login($user);
 
@@ -26,6 +28,6 @@ class LoginController extends Controller
     }
 
     protected function userAuthenticated(Request $request, $user) {
-        return redirect()->intended();
+        return redirect()->to(route('auth.map'));
     }
 }

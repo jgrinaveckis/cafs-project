@@ -10,10 +10,9 @@ class LogoutController extends Controller
 {
     public function logout(Request $request)
     {
-        //logout and flush all session info via Facade
         Auth::logout();
         Session::flush();
         
-        return redirect('login');
+        return redirect('/');
     }
 }

@@ -23,7 +23,7 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'email' => 'required|email:rfc,dns|unique:users,email',
-            'username' => 'required|unique:users,username',
+            'name' => 'required|min:3',
             'password' => 'required|min:5',
             'password_confirmation' => 'required|same:password'
         ];

@@ -1,10 +1,8 @@
-@extends('layouts.auth-master')
+@extends('layouts.app-master')
 
 @section('content')
     <form method="post" action="{{ route('register') }}">
-
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-        
         <h1 class="h3 mb-3 fw-normal">Register</h1>
 
         <div class="form-group form-floating mb-3">
@@ -16,13 +14,13 @@
         </div>
 
         <div class="form-group form-floating mb-3">
-            <input type="text" class="form-control" name="username" placeholder="Username" required="required" autofocus>
-            <label for="floatingName">Username</label>
-            @if ($errors->has('username'))
-                <span class="text-danger text-left">{{ $errors->first('username') }}</span>
+            <input type="" class="form-control" name="name" placeholder="Name" required="required">
+            <label for="floatingName">Name</label>
+            @if ($errors->has('name'))
+                <span class="text-danger text-left">{{ $errors->first('name') }}</span>
             @endif
         </div>
-        
+
         <div class="form-group form-floating mb-3">
             <input type="password" class="form-control" name="password" placeholder="Password" required="required">
             <label for="floatingPassword">Password</label>
