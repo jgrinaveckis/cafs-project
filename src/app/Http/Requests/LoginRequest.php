@@ -23,29 +23,12 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required',
+            'email' => 'required',
             'password' => 'required'
         ];
     }
 
     public function getCreds() {
-
-        $email = $this->input('email');
-        if($this->isUsername($email)) {
-            return [
-                'username' => $email,
-                'password' => $this->input('password')
-            ]
-        }
-        return $this->only('username', 'password');
-    }
-
-    protected function isUsername($field) {
-        //think if actually this validation and username stuff is needed at all
-        $validator = $this->container->make(ValidationFactory::class);
-        return !$validator->make(
-            ['username' => $field],
-            ['username' => 'email']
-        )->fails();
+        return $this->only('email', 'password');
     }
 }

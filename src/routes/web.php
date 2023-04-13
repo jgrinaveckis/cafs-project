@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LogoutController;
-use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\RegistrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +19,14 @@ use App\Http\Controllers\LoginController;
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
-     Route::get('/', [HomeController::class, 'home'])->name('home');
+    // Route::get('/', [LoginController::class, 'home'])->name('home');
     /**
      * Routes for authorized user
      */
      Route::group(['middleware' => ['auth']], function() {
+        Route::get('/map', [MapController::class, 'show'])->name('map');
         Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+        Route::get('/aggregations', [AggregationsController::class, 'show'])->name('aggregations');
     });
 
     /**
@@ -35,7 +37,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('/register', [RegistrationController::class, 'show'])->name('register_show');
         Route::post('/register', [RegistrationController::class, 'register'])->name('register');
 
-        Route::get('/login', [LoginController::class, 'show'])->name('login_show');
-        Route::post('/login', [LoginController::class, 'login'])->name('login');
+        Route::get('/', [LoginController::class, 'show'])->name('login_show');
+        Route::post('/', [LoginController::class, 'login'])->name('login');
     });
 });
