@@ -1,3 +1,4 @@
 test
 students
 node_modules
+*.cnf
