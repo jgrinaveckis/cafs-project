@@ -4,11 +4,15 @@ from pymysqlreplication.row_event import (
     UpdateRowsEvent,
     WriteRowsEvent,
 )
-from Kafka import KafkaProducer
+from kafka import KafkaProducer, KafkaClient
 import logging
 import sys
 from json import dumps
 from time import sleep
+
+from kafka.admin import KafkaAdminClient, NewTopic
+
+
 
 logging.basicConfig(
     #filename='/tmp/snowflake_python_connector.log',
@@ -25,6 +29,16 @@ mysql_settings = {'host': "mysql",
 				}
 
 
+def create_topic():
+	admin_client = KafkaAdminClient(
+    bootstrap_servers="kafka:9093", 
+    client_id='test'
+	)
+	topic_list = []
+	topic_list.append(NewTopic(name="example_topic", num_partitions=1, replication_factor=1))
+	admin_client.create_topics(new_topics=topic_list, validate_only=False)
+
+
 def build_message(binlog_event, row):
 	table = {'table': str(getattr(binlog_event, 'schema', '')) + "." + str(getattr(binlog_event, 'table', ''))}
 	if isinstance(binlog_event,WriteRowsEvent):
@@ -37,8 +51,10 @@ def build_message(binlog_event, row):
 def send_event():
 	logging.info(f"Creating Kafka producer...")
 
+	# create_topic()
+
 	producer = KafkaProducer(
-		bootstrap_servers=['localhost:9092'],
+		bootstrap_servers=['kafka:9092'],
 		value_serializer=lambda x:dumps(x).encode('utf-8')
 		)
 
@@ -61,11 +77,13 @@ def send_event():
 			logging.info(f"Table: {msg['table']['table']} received {msg['event']} type of change")
 			logging.info(msg['data'])
 			try:
-				producer.send('cafs-project-topic', value=msg)
+				r = producer.send('topic2', value=msg)
+				producer.flush()
 			except:
 				sleep(1)
-				producer.send('cafs-project-topic', value=msg)
+				producer.send('topic2', value=msg)
+				producer.flush()
 	stream.close()
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     send_event()
