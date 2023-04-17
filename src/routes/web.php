@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\ConsumerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +41,5 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('/', [LoginController::class, 'show'])->name('login_show');
         Route::post('/', [LoginController::class, 'login'])->name('login');
     });
+    Route::get('/messages', [ConsumerController::class, 'consume']);
 });
