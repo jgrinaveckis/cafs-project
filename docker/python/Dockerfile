@@ -4,4 +4,4 @@ WORKDIR /pyrepl/
 RUN chmod -R 777 /pyrepl/
 
 RUN pip --version
-RUN pip install cryptography mysql-replication kafka-python
+RUN pip install cryptography mysql-replication kafka-python websockets aiokafka

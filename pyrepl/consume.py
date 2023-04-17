@@ -1,12 +1,13 @@
 from kafka.consumer import KafkaConsumer
 import json
 import sys
+import asyncio
+import websockets
+import aiokafka
 import logging
 from time import sleep
 
-#--------------------------------------
-#-----------ONLY FOR TESTING-----------
-#--------------------------------------
+WEBSOCKET_PORT=3003
 
 logging.basicConfig(
     #filename='/tmp/snowflake_python_connector.log',
@@ -16,28 +17,49 @@ logging.basicConfig(
 	datefmt='%Y-%m-%d %H:%M:%S'
 	)
 
+async def consumer_handler(websocket):
+	try:
+		print("Starting consumer", 'kafka:9092')
+		consumer = aiokafka.AIOKafkaConsumer(
+		'topic2',
+		loop=asyncio.get_event_loop(),
+		bootstrap_servers=['kafka:9092'],
+		auto_offset_reset="earliest",
+		enable_auto_commit=True,
+		group_id="test-grp",
+		consumer_timeout_ms=1000000,
+		max_poll_interval_ms=2147483647,
+		value_deserializer=lambda x: json.loads(x.decode("utf-8"))
+		)
+		logging.info("Consumer created")
 
-def main():
-	print("Starting consumer", 'kafka:9092')
-	consumer = KafkaConsumer(
-	'topic2',
-	bootstrap_servers=['kafka:9092'],
-	auto_offset_reset="earliest",
-	enable_auto_commit=True,
-	group_id="test-grp",
-	value_deserializer=lambda x: json.loads(x.decode("utf-8"))
+		await consumer.start()
+		try:
+			async for msg in consumer:
+				await websocket.send(json.dumps(msg.value))
+				logging.info(msg.value)
+		finally:
+			await consumer.stop()
+	except Exception as e:
+		logging.exception(exc_info=e)
+
+async def send_msg(websocket):
+	consumer = asyncio.ensure_future(
+		consumer_handler(websocket)
 	)
 
-	for message in consumer:
-		message = f"""
-		Message received: {message.value}
-		Message key: {message.key}
-		Message partition: {message.partition}
-		Message offset: {message.offset}
-		"""
-		logging.info(message)
-		sleep(2)
-	pass
+	done, pending = await asyncio.wait(
+		[consumer],
+		return_when=asyncio.FIRST_COMPLETED
+	)
 
-if __name__=="__main__":
-  main()
+	for task in pending:
+		task.cancel()
+
+while True:
+	start_server = websockets.serve(send_msg, "0.0.0.0", WEBSOCKET_PORT)
+
+	logging.info(f"Started Websocket on port {WEBSOCKET_PORT}")
+
+	asyncio.get_event_loop().run_until_complete(start_server)
+	asyncio.get_event_loop().run_forever()

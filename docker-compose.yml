@@ -36,17 +36,18 @@ services:
         networks:
             - laravel
     
-    npm:
-        image: node:17
-        container_name: npm
-        working_dir: /var/www/
+    node:
+        image: node:18
+        container_name: node
+        working_dir: /app
         volumes:
-            - ./src:/var/www/
+            - ./node:/app
         ports:
-            - 3001:3001
-        entrypoint: ["/bin/sh", "-c", "chmod -R 777 . && npm install && npm run dev"]
+            - 3005:3005
+        # entrypoint: ["/bin/sh", "-c", "chmod -R 777 . && npm install && npm run dev"]
         networks:
             - laravel
+        command: tail -f /dev/null
 
 
     zookeeper:

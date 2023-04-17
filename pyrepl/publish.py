@@ -12,8 +12,6 @@ from time import sleep
 
 from kafka.admin import KafkaAdminClient, NewTopic
 
-
-
 logging.basicConfig(
     #filename='/tmp/snowflake_python_connector.log',
     stream=sys.stdout,
