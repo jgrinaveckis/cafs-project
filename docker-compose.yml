@@ -81,21 +81,21 @@ services:
         depends_on:
             - zookeeper
 
-    # consumer:
-    #     build: ./docker/python
-    #     container_name: consumer
-    #     working_dir: /pyrepl/
-    #     volumes:
-    #         - ./pyrepl:/pyrepl
-    #     ports:
-    #         - 3003:3003
-    #     entrypoint: ["python", "consume.py"]
-    #     restart: always
-    #     depends_on:
-    #         - zookeeper
-    #         - kafka
-    #     networks:
-    #         - laravel
+    consumer:
+        build: ./docker/python
+        container_name: consumer
+        working_dir: /pyrepl/
+        volumes:
+            - ./pyrepl:/pyrepl
+        ports:
+            - 3003:3003
+        entrypoint: ["python", "consume.py"]
+        restart: always
+        depends_on:
+            - zookeeper
+            - kafka
+        networks:
+            - laravel
 
     publisher:
         build: ./docker/python
