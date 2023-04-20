@@ -14,7 +14,7 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request) {
 
-        $creds = $request->getCreds();
+        $creds = request(['email', 'password']);
 
         if(!Auth::validate($creds)):
             return redirect('/')->with('error', "User cant be authorised");

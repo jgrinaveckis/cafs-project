@@ -13,6 +13,7 @@ import HelloWorld from './components/HelloWorld.vue'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/messages">Msg</RouterLink>
       </nav>
     </div>
   </header>
@@ -20,7 +21,9 @@ import HelloWorld from './components/HelloWorld.vue'
   <RouterView />
 </template>
 
-<style scoped>
+<style lang="scss">
+@use '../node_modules/bootstrap/scss/bootstrap.scss';
+
 header {
   line-height: 1.5;
   max-height: 100vh;

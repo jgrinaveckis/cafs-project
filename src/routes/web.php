@@ -20,7 +20,11 @@ use App\Http\Controllers\ConsumerController;
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
-    // Route::get('/', [LoginController::class, 'home'])->name('home');
+    Route::get('/', [LoginController::class, 'show'])->name('login_show');
+    Route::post('/', [LoginController::class, 'login'])->name('login');
+    Route::get('/register', [RegistrationController::class, 'show'])->name('register_show');
+    Route::post('/register', [RegistrationController::class, 'register'])->name('register');
+
     /**
      * Routes for authorized user
      */
@@ -30,16 +34,4 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('/aggregations', [AggregationsController::class, 'show'])->name('aggregations');
     });
 
-    /**
-     * Routes for guest (un-auth) user
-     */
-    Route::group(['middleware' => ['guest']], function() {
-
-        Route::get('/register', [RegistrationController::class, 'show'])->name('register_show');
-        Route::post('/register', [RegistrationController::class, 'register'])->name('register');
-
-        Route::get('/', [LoginController::class, 'show'])->name('login_show');
-        Route::post('/', [LoginController::class, 'login'])->name('login');
-    });
-    Route::get('/messages', [ConsumerController::class, 'consume']);
 });

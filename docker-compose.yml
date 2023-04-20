@@ -14,7 +14,7 @@ services:
             - laravel
 
     php:
-        container_name: ca-l-php
+        container_name: php
         build: ./docker/php
         working_dir: /var/www
         volumes:
@@ -25,7 +25,7 @@ services:
             - laravel
     
     mysql:
-        container_name: ca-l-mysql
+        container_name: mysql
         image: mysql:8
         env_file:
            - .env

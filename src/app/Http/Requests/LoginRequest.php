@@ -27,8 +27,4 @@ class LoginRequest extends FormRequest
             'password' => 'required'
         ];
     }
-
-    public function getCreds() {
-        return $this->only('email', 'password');
-    }
 }
