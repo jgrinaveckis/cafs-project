@@ -21,10 +21,10 @@ class ApiAuthMiddleware
     if (!$token)
       throw new UnauthorizedException();
 
-    $userId = $token;
-    $user = User::find($userId);
-    if (!$user)
-      throw new UnauthorizedException();
+    // $userId = $token;
+    // $user = User::find($userId);
+    // if (!$user)
+    //   throw new UnauthorizedException();
 
     $request->setUserResolver(function () use ($user) {
       return $user;

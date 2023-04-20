@@ -12,7 +12,7 @@ class LogoutController extends Controller
     {
         Auth::logout();
         Session::flush();
-        
-        return redirect('/');
+
+        return response(['success', "Successfully logged out"], 200);
     }
 }

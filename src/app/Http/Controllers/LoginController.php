@@ -15,19 +15,17 @@ class LoginController extends Controller
     public function login(LoginRequest $request) {
 
         $creds = request(['email', 'password']);
-
-        if(!Auth::validate($creds)):
-            return redirect('/')->with('error', "User cant be authorised");
-        endif;
+        #retireves jwt 
+        $token = Auth::attempt($creds);
         
-        #retrieve user
-        $user = Auth::getProvider()->retrievedByCredentials($creds);
-        Auth::login($user);
-
-        return $this->userAuthenticated($request, $user);
-    }
-
-    protected function userAuthenticated(Request $request, $user) {
-        return redirect()->to(route('auth.map'));
+        if($token) {
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ]);
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 }

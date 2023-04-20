@@ -18,20 +18,13 @@ use App\Http\Controllers\ConsumerController;
 |
 */
 
-Route::group(['namespace' => 'App\Http\Controllers'], function () {
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/register', [RegistrationController::class, 'register']);
 
-    Route::get('/', [LoginController::class, 'show'])->name('login_show');
-    Route::post('/', [LoginController::class, 'login'])->name('login');
-    Route::get('/register', [RegistrationController::class, 'show'])->name('register_show');
-    Route::post('/register', [RegistrationController::class, 'register'])->name('register');
-
-    /**
-     * Routes for authorized user
-     */
-     Route::group(['middleware' => ['auth']], function() {
-        Route::get('/map', [MapController::class, 'show'])->name('map');
-        Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
-        Route::get('/aggregations', [AggregationsController::class, 'show'])->name('aggregations');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [LogoutController::class, 'logout']);
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/aggregations', [AggregationsController::class, 'show']);
     });
 
 });

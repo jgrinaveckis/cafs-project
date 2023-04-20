@@ -4,7 +4,6 @@ import WebSocket from 'isomorphic-ws';
 
     let dataMsg = ref();
     let messages = ref([]);
-    let connections = [];
     const ws = new WebSocket('ws://localhost:3003');
 
     function addMessage(dataMsg) {
@@ -13,16 +12,6 @@ import WebSocket from 'isomorphic-ws';
     }
 
     onMounted(() => {
-
-      // ws.onopen = function open() {
-      //   console.log("New connection added", ws);
-      //   connections.push(ws);
-      // };
-      // ws.onclose = function close() {
-      //   console.log("New connection removed", ws);
-      //   let index = 
-      //   connections.pop(ws);
-      // }
       ws.onmessage = function message(data) {
         addMessage(data);
         console.log(data.data);
@@ -32,11 +21,12 @@ import WebSocket from 'isomorphic-ws';
 </script>
 
 <template>
+
   <h1>
     Hello
   </h1>
+
     <div id="messages">
-      <button class="btn btn-danger">aaa</button>
       <div id="message-box" v-for="(message, index) in messages">
         <div>
           <p>{{ message }}</p>

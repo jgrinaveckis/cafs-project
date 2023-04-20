@@ -72,7 +72,7 @@ def send_event():
 	for event in stream:
 		for e_row in event.rows:
 			msg = build_message(event, e_row)
-			logging.info(f"Table: {msg['table']['table']} received {msg['event']} type of change")
+			logging.info(f"Table: {msg['schema']['table']} received {msg['event']} type of change")
 			logging.info(msg['data'])
 			try:
 				r = producer.send('topic2', value=msg)
