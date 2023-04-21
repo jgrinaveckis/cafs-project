@@ -1,5 +1,13 @@
 <script setup lang="ts">
+
+import Map from '../components/Map.vue';
+
+const props = defineProps({
+    lat: Number,
+    lon: Number
+});
+
 </script>
 <template>
-    <h1>Hello!</h1>
+    <Map></Map>
 </template>
