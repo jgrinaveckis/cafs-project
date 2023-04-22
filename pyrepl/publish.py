@@ -7,6 +7,7 @@ from pymysqlreplication.row_event import (
 from kafka import KafkaProducer, KafkaClient
 import logging
 import sys
+import pymysql
 from json import dumps
 from time import sleep
 
@@ -23,8 +24,30 @@ logging.basicConfig(
 mysql_settings = {'host': "mysql",
 					'port': 3306, 
 					'user': "ca", 
-					'passwd': "ca"
+					'passwd': "ca",
+					'dbname': "ca",
+					'charset': "utf8mb4"
 				}
+
+COLUMNS = ('ip', 'iso_state', "iso_country", "created_at", "lat", "lon")
+
+def create_connection():
+	connectionObject   = pymysql.connect(host=mysql_settings['host'], user=mysql_settings['user'], password=mysql_settings['passwd'],
+                                     db=mysql_settings['dbname'], charset=mysql_settings['charset'])
+	return connectionObject
+
+def insert_row(connection, data:dict):
+	try:
+		cursor = connection.cursor()
+		query = f"""
+			INSERT INTO test_leads_insert(ip, iso_state, iso_country, lat, lon, lead_created_at)
+			VALUES("{data['ip']}", "{data['iso_state']}", "{data['iso_country']}", "{data['lat']}", "{data['lon']}", "{data['lead_created_at']}")
+		"""
+		cursor.execute(query)
+	except Exception as e:
+		print("Exeception occured:{}".format(e))
+	finally:
+		connection.close()
 
 
 def create_topic():
@@ -40,20 +63,20 @@ def create_topic():
 def build_message(binlog_event, row):
 	table = {'table': str(getattr(binlog_event, 'schema', '')) + "." + str(getattr(binlog_event, 'table', ''))}
 	if isinstance(binlog_event,WriteRowsEvent):
-		return {'event':'INSERT', 'table':table, 'data':row['values']}
-	elif isinstance(binlog_event,UpdateRowsEvent):
-		return {'event':'UPDATE', 'table':table, 'data':row['after_values']}
-	elif isinstance(binlog_event,DeleteRowsEvent):
-		return {'event':'DELETE', 'table':table, 'data':row['values']}
+		event_data = row['values']
+		event_data = {k: event_data.get(k, None) for k in COLUMNS}
+		return {'event':'INSERT', 'table':table, 'data':event_data}
 
 def send_event():
 	logging.info(f"Creating Kafka producer...")
 
 	# create_topic()
+	conn = create_connection()
+
 
 	producer = KafkaProducer(
 		bootstrap_servers=['kafka:9092'],
-		value_serializer=lambda x:dumps(x).encode('utf-8')
+		value_serializer=lambda x:dumps(x, default=str).encode('utf-8')
 		)
 
 	logging.info(f"Connecting to Mysql at host {mysql_settings['host']}...")
@@ -72,14 +95,15 @@ def send_event():
 	for event in stream:
 		for e_row in event.rows:
 			msg = build_message(event, e_row)
-			logging.info(f"Table: {msg['schema']['table']} received {msg['event']} type of change")
-			logging.info(msg['data'])
+			logging.info(f"Table: {msg['table']} received {msg['event']} type of change")
 			try:
-				r = producer.send('topic2', value=msg)
+				producer.send('topic2', value=msg)
+				insert_row(conn, msg['data'])
 				producer.flush()
 			except:
 				sleep(1)
 				producer.send('topic2', value=msg)
+				insert_row(conn, msg['data'])
 				producer.flush()
 	stream.close()
 

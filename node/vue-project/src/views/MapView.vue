@@ -7,14 +7,14 @@ import WebSocket from 'isomorphic-ws';
     const ws = new WebSocket('ws://localhost:3003');
 
     function addMessage(dataMsg) {
-        console.log("New message ", dataMsg)
-        messages.value.push(dataMsg.data)
+        console.log("New message ", dataMsg.data.ip)
+        messages.value.push(dataMsg.data.ip)
     }
 
     onMounted(() => {
       ws.onmessage = function message(data) {
         addMessage(data);
-        console.log(data.data);
+        console.log(data.data.ip);
       }
     })
 

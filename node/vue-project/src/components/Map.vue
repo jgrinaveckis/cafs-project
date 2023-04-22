@@ -9,7 +9,13 @@ import { shallowRef, onMounted } from 'vue';
 let root: any;
 const chartdiv = shallowRef();
 let radius = 0.5;
-
+const props = defineProps<{
+    ip: string,
+    iso_state: string,
+    iso_country: string,
+    lat: number,
+    lon: number,
+}>()
 const geoPoint = {
       latitude: 38.8951,
       longitude: -77.0364
@@ -18,7 +24,6 @@ const geoPoint = {
 onMounted(()  => {
     root = am5.Root.new(chartdiv.value);
     root.setThemes([am5themes_Animated.new(root)]);
-    let colors = am5.ColorSet.new(root, {});
 
     let chart = root.container.children.push(
         am5map.MapChart.new(root, {
@@ -40,13 +45,6 @@ onMounted(()  => {
         geometry:
             am5map.getGeoRectangle(90, 180, -90, -180)
     });
-
-    // let circleSeries = chart.series.push(
-    //     am5map.MapPolygonSeries.new(root, {}));
-    //         circleSeries.mapPolygons.template.setAll({
-    //         templateField: "polygonTemplate",
-    //         tooltipText: "{name}:{value}"
-    // });
 
     // Country series polygon
     let countrySeries = chart.series.push(

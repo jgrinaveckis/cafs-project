@@ -1,13 +1,113 @@
 <script setup lang="ts">
 
-import Map from '../components/Map.vue';
+import * as am5 from '@amcharts/amcharts5';
+import * as am5map from "@amcharts/amcharts5/map";
+import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldLow";
+import am4geodata_usaStatesLow from "@amcharts/amcharts4-geodata/usaHigh";
+import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import { computed, onMounted, ref, shallowRef } from 'vue'
 
-const props = defineProps({
-    lat: Number,
-    lon: Number
+let root: any;
+const chartdiv = shallowRef();
+let dataMsg = ref();
+let messages = ref([]);
+const ws = new WebSocket('ws://localhost:3003');
+const geoPoint = {
+      latitude: 38.8952,
+      longitude: -77.0364
+    };
+
+
+onMounted(()  => {
+    root = am5.Root.new(chartdiv.value);
+    root.setThemes([am5themes_Animated.new(root)]);
+
+    let chart = root.container.children.push(
+        am5map.MapChart.new(root, {
+            panX: "rotateX",
+            panY: "rotateY",
+            projection: am5map.geoOrthographic()
+        })
+    );
+
+    let backgroundSeries = chart.series.push(
+        am5map.MapPolygonSeries.new(root, {})
+    );
+    backgroundSeries.mapPolygons.template.setAll({
+        fill: root.interfaceColors.get("alternativeBackground"),
+        fillOpacity: 0.1,
+        strokeOpacity: 0
+    });
+    backgroundSeries.data.push({
+        geometry:
+            am5map.getGeoRectangle(90, 180, -90, -180)
+    });
+
+    // Country series polygon
+    let countrySeries = chart.series.push(
+        am5map.MapPolygonSeries.new(root, {
+            geoJSON: am4geodata_worldLow 
+        }
+    ));
+    countrySeries.mapPolygons.template.setAll({
+        fill: root.interfaceColors.get("alternativeBackground"),
+        fillOpacity: 0.15,
+        strokeWidth: 0.5,
+        stroke: root.interfaceColors.get("background")
+    });
+
+    let stateSeries = chart.series.push(
+        am5map.MapPolygonSeries.new(root, {
+            geoJSON: am4geodata_usaStatesLow 
+        }
+    ));
+    stateSeries.mapPolygons.template.setAll({
+        fill: root.interfaceColors.get("alternativeBackground"),
+        fillOpacity: 0.05,
+        strokeWidth: 0.5,
+        stroke: root.interfaceColors.get("background")
+    });
+
+    let pointSeries = chart.series.push(
+        am5map.MapPointSeries.new(root, {
+        })
+    );
+    pointSeries.bullets.push(function() {
+        return am5.Bullet.new(root, {
+            sprite: am5.Circle.new(root, {
+                radius: 5,
+                fill: am5.color(0xff0000)
+            })
+        });
+    });
+
+    chart.animate({
+        key: "rotationX",
+        from: 0,
+        to: 360,
+        duration: 40000,
+        loops: Infinity
+    });
+
+    ws.onmessage = function message(data) {
+        let obj = JSON.parse(data.data);
+        pointSeries.pushDataItem({ latitude: obj.data.lat, longitude: obj.data.lon });
+    }
+
 });
-
 </script>
 <template>
-    <Map></Map>
+    <div class="d-flex justify-content-center">
+        <div class="hello" ref="chartdiv"></div>
+    </div>
+
 </template>
+
+<style>
+.hello {
+  width: 800px;
+  height: 800px;
+  align-items: center;
+  display: inline-block;
+}
+</style>

@@ -1,7 +1,6 @@
-export type IOrder = {
-    longitude: string,
-    latitude: string,
+export type ILead = {
     ip: string,
-    project: string,
-    date: string
+    iso_state: string,
+    iso_country: string,
+    created_at: Date
 }
