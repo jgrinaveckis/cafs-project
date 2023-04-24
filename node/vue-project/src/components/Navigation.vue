@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useAuthStore } from '../stores/auth'
+const authStore = useAuthStore()
+
+
 </script>
 
 <template>
@@ -15,8 +19,9 @@
             </li>
         </ul>
         </div>
-        <div class="logout d-flex flex-row-reverse px-2">
-            <router-link class="nav-link" to="/logout">Logout</router-link>
+        <div class="logout d-flex flex-row-reverse px-2" v-if="authStore.user">
+            <a href="#" class="nav-link" @click.prevent="authStore.logout">Logout</a>
+            <div>Profile ({{ authStore.user.name }})</div>
         </div>
     </div>
     </nav>

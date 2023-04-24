@@ -14,26 +14,28 @@ from time import sleep
 from kafka.admin import KafkaAdminClient, NewTopic
 
 logging.basicConfig(
-    #filename='/tmp/snowflake_python_connector.log',
     stream=sys.stdout,
     level=logging.INFO,
     format='%(asctime)s %(levelname)-8s %(message)s',
 	datefmt='%Y-%m-%d %H:%M:%S'
 	)
 
-mysql_settings = {'host': "mysql",
-					'port': 3306, 
-					'user': "ca", 
-					'passwd': "ca",
-					'dbname': "ca",
-					'charset': "utf8mb4"
-				}
+mysql_settings = {
+	'host': "mysql",
+	'port': 3306, 
+	'user': "ca", 
+	'passwd': "ca",
+} 
+additional_db_settings = {
+	'dbname': "ca",
+	'charset': "utf8mb4"
+}
 
 COLUMNS = ('ip', 'iso_state', "iso_country", "created_at", "lat", "lon")
 
 def create_connection():
 	connectionObject   = pymysql.connect(host=mysql_settings['host'], user=mysql_settings['user'], password=mysql_settings['passwd'],
-                                     db=mysql_settings['dbname'], charset=mysql_settings['charset'])
+                                     db=additional_db_settings['dbname'], charset=additional_db_settings['charset'])
 	return connectionObject
 
 def insert_row(connection, data:dict):
@@ -56,7 +58,7 @@ def create_topic():
     client_id='test'
 	)
 	topic_list = []
-	topic_list.append(NewTopic(name="example_topic", num_partitions=1, replication_factor=1))
+	topic_list.append(NewTopic(name="topic2", num_partitions=1, replication_factor=1))
 	admin_client.create_topics(new_topics=topic_list, validate_only=False)
 
 
@@ -98,12 +100,12 @@ def send_event():
 			logging.info(f"Table: {msg['table']} received {msg['event']} type of change")
 			try:
 				producer.send('topic2', value=msg)
-				insert_row(conn, msg['data'])
+				# insert_row(conn, msg['data'])
 				producer.flush()
 			except:
 				sleep(1)
 				producer.send('topic2', value=msg)
-				insert_row(conn, msg['data'])
+				# insert_row(conn, msg['data'])
 				producer.flush()
 	stream.close()
 

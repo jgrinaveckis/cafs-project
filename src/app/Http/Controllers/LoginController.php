@@ -25,7 +25,12 @@ class LoginController extends Controller
                 'expires_in' => auth()->factory()->getTTL() * 60
             ]);
         } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'message' => 'Invalid credentials. Email or password is incorrect.',
+                'errors' => []
+                ],
+                401
+            );
         }
     }
 }

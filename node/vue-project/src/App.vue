@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import Navigation from './components/Navigation.vue';
+import { onMounted } from 'vue'
+import { useAuthStore } from './stores/auth'
+
+// Adding auth globally in Vue app
+const authStore = useAuthStore()
+onMounted(() => authStore.checkTokenStorage())
 </script>
 
 <template>
