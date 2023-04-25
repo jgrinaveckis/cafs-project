@@ -1,7 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 import WebSocket from 'isomorphic-ws';
-import { ILead } from '../interfaces';
+import type { ILead } from '../interfaces';
 
 export const leadsStore = defineStore('leads', () => {
     let leads = ref<ILead | null>(null);

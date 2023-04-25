@@ -8,8 +8,14 @@ from kafka import KafkaProducer, KafkaClient
 import logging
 import sys
 import pymysql
+import os
 from json import dumps
 from time import sleep
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Loading .env file for conn details
+load_dotenv()
 
 from kafka.admin import KafkaAdminClient, NewTopic
 
@@ -21,10 +27,10 @@ logging.basicConfig(
 	)
 
 mysql_settings = {
-	'host': "mysql",
-	'port': 3306, 
-	'user': "ca", 
-	'passwd': "ca",
+	'host': os.getenv('DB_HOST'),
+	'port': int(os.getenv('DB_PORT')), 
+	'user': os.getenv('DB_USERNAME'), 
+	'passwd': os.getenv('DB_PASSWORD'),
 } 
 additional_db_settings = {
 	'dbname': "ca",
@@ -54,8 +60,8 @@ def insert_row(connection, data:dict):
 
 def create_topic():
 	admin_client = KafkaAdminClient(
-    bootstrap_servers="kafka:9093", 
-    client_id='test'
+		bootstrap_servers="kafka:9093", 
+		client_id='test'
 	)
 	topic_list = []
 	topic_list.append(NewTopic(name="topic2", num_partitions=1, replication_factor=1))
@@ -63,8 +69,10 @@ def create_topic():
 
 
 def build_message(binlog_event, row):
-	table = {'table': str(getattr(binlog_event, 'schema', '')) + "." + str(getattr(binlog_event, 'table', ''))}
-	if isinstance(binlog_event,WriteRowsEvent):
+	schema_name = str(getattr(binlog_event, 'schema', ''))
+	tbl_name = str(getattr(binlog_event, 'table', ''))
+	table = {'table': schema_name + "." + tbl_name}
+	if isinstance(binlog_event,WriteRowsEvent) and 'leads' in tbl_name:
 		event_data = row['values']
 		event_data = {k: event_data.get(k, None) for k in COLUMNS}
 		return {'event':'INSERT', 'table':table, 'data':event_data}
@@ -74,7 +82,6 @@ def send_event():
 
 	# create_topic()
 	conn = create_connection()
-
 
 	producer = KafkaProducer(
 		bootstrap_servers=['kafka:9092'],
@@ -97,16 +104,17 @@ def send_event():
 	for event in stream:
 		for e_row in event.rows:
 			msg = build_message(event, e_row)
-			logging.info(f"Table: {msg['table']} received {msg['event']} type of change")
-			try:
-				producer.send('topic2', value=msg)
-				# insert_row(conn, msg['data'])
-				producer.flush()
-			except:
-				sleep(1)
-				producer.send('topic2', value=msg)
-				# insert_row(conn, msg['data'])
-				producer.flush()
+			if msg:
+				logging.info(f"Table: {msg['table']} received {msg['event']} type of change")
+				try:
+					producer.send('topic2', value=msg)
+					# insert_row(conn, msg['data'])
+					producer.flush()
+				except:
+					sleep(1)
+					producer.send('topic2', value=msg)
+					# insert_row(conn, msg['data'])
+					producer.flush()
 	stream.close()
 
 if __name__ == "__main__":
