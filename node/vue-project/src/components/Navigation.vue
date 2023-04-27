@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useAuthStore } from '../stores/auth'
-const authStore = useAuthStore()
+import { roles } from '../composables/roles'
 
+const authStore = useAuthStore()
+const { isAdmin } = roles()
 
 </script>
 
@@ -14,14 +16,17 @@ const authStore = useAuthStore()
             <li class="nav-item">
                 <router-link class="nav-link" to="/map">Home</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="isAdmin">
                 <router-link class="nav-link" to="/aggregations">Aggregations</router-link>
+            </li>
+            <li class="nav-item">
+                <router-link class="nav-link" to="/about">About</router-link>
             </li>
         </ul>
         </div>
         <div class="logout d-flex flex-row-reverse px-2" v-if="authStore.user">
             <a href="#" class="nav-link" @click.prevent="authStore.logout">Logout</a>
-            <div>Profile ({{ authStore.user.name }})</div>
+            <div>Welcome, ({{ authStore.user.name }})</div>
         </div>
     </div>
     </nav>

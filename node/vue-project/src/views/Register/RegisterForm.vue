@@ -1,28 +1,27 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { onMounted, reactive, ref } from 'vue'
-import { useAuthStore } from '../../stores/auth'
 import { useRouter } from 'vue-router'
 
-const loginForm = reactive({
+const regForm = reactive({
     email: "",
-    password: ""
+    name: "",
+    password: "",
+    confirmPassword: ""
 })
 
 const errors = ref({})
 const errMsg = ref<string | null>()
 const isBusy = ref(false)
-const authStore = useAuthStore()
 const router = useRouter()
 const emailElement = ref<HTMLInputElement | null>(null)
 
 const submit = () => {
     isBusy.value = true
     axios
-        .post('http://localhost/login', loginForm)
+        .post('http://localhost/register', regForm)
         .then((res) => {
-            authStore.registerToken(res.data.token)
-            router.push('/map')
+            router.push('/')
         })
         .catch((err) => {
             errMsg.value = err.response.data.message
@@ -45,9 +44,23 @@ onMounted(() => emailElement.value?.focus())
 
                 <div class="mb-md-5 mt-md-4 pb-5">
 
-                    <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+                    <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
 
-                    <p class="text-white-50 mb-5">Please enter your login and password!</p>
+                    <div class="form-outline form-white mb-4">
+                        <label class="form-label" for="username">Username</label>
+                        <input 
+                            type="username" 
+                            id="username" 
+                            class="form-control form-control-lg"
+                            v-model.trim="regForm.name"
+                            ref="username"
+                             />
+                        <p></p>
+                        <div class="form-text text-danger" v-if="errors.name">
+                            {{ errors.name.join(' ') }}
+                        </div>
+
+                    </div>
 
                     <div class="form-outline form-white mb-4">
                         <label class="form-label" for="email">Email</label>
@@ -55,9 +68,10 @@ onMounted(() => emailElement.value?.focus())
                             type="email" 
                             id="email" 
                             class="form-control form-control-lg"
-                            v-model.trim="loginForm.email"
+                            v-model.trim="regForm.email"
                             ref="emailElement"
                              />
+                        <p></p>
                         <div class="form-text text-danger" v-if="errors.email">
                             {{ errors.email.join(' ') }}
                         </div>
@@ -70,10 +84,25 @@ onMounted(() => emailElement.value?.focus())
                             type="password"
                             id="password"
                             class="form-control form-control-lg"
-                            v-model.trim="loginForm.password" />
+                            v-model.trim="regForm.password" />
+                        <p class="text-white-50">Password have to be longer than 5 symbols</p>
                         <div class="form-text text-danger" v-if="errors.password">
                             {{ errors.password.join(' ') }}
                         </div>
+
+                    </div>
+
+                    <div class="form-outline form-white mb-4">
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input 
+                            type="password"
+                            id="confirmPassword"
+                            class="form-control form-control-lg"
+                            v-model.trim="regForm.confirmPassword" />
+                        <div class="form-text text-danger" v-if="errors.password_confirmation">
+                            {{ errors.password_confirmation.join(' ') }}
+                        </div>
+
                     </div>
 
                     <button 
@@ -82,14 +111,9 @@ onMounted(() => emailElement.value?.focus())
                         :disabled="isBusy"
                     >
                     <div class="spinner-border spinner-border-sm" v-if="isBusy"></div>
-                        Login
+                        Register
                     </button>
 
-                </div>
-
-                <div>
-                    <p class="mb-0">Don't have an account? <router-link to="/register">Sign Up</router-link>
-                    </p>
                 </div>
 
             </div>

@@ -17,7 +17,6 @@ class CorsMiddleware
     {
         return $next($request)
             ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Headers', 'content-type')
             ->header('Access-Control-Allow-Headers', 'content-type, authorization')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     }

@@ -27,11 +27,11 @@ export const useAuthStore = defineStore('auth', () => {
     });
   }
 
-  const registerToken = (token: string) => {
-    window.localStorage.setItem(TOKEN, token)
+    const registerToken = (token: string) => {
+      window.localStorage.setItem(TOKEN, token)
 
-    loadHttpClient()
-  }
+      loadHttpClient()
+    }
 
   const checkTokenStorage = () => {
     const token = window.localStorage.getItem(TOKEN)

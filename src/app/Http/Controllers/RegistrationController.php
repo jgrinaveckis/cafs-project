@@ -23,10 +23,12 @@ class RegistrationController extends Controller
         $enteredPassword = $request->input('password');
         $hashedPassword = Hash::make($enteredPassword);
 
+        $confirmedPassword = $request->input('password_confirmation');
+        $hashedConfirmedPassword = Hash::make($confirmedPassword);
+
         $user = new User($request->all());
         $user->password = $hashedPassword;
+        $user->password_confirmation = $hashedConfirmedPassword;
         $user->save();
-
-        return response(['success', 'User was registered succesfully'], 200);
     }
 }
