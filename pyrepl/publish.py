@@ -37,7 +37,7 @@ additional_db_settings = {
 	'charset': "utf8mb4"
 }
 
-COLUMNS = ('ip', 'iso_state', "iso_country", "created_at", "lat", "lon")
+COLUMNS = ('ip', 'iso_state', "iso_country", "created_at", "lat", "lon", "lead_created_at")
 
 def create_connection():
 	connectionObject   = pymysql.connect(host=mysql_settings['host'], user=mysql_settings['user'], password=mysql_settings['passwd'],
@@ -108,12 +108,12 @@ def send_event():
 				logging.info(f"Table: {msg['table']} received {msg['event']} type of change")
 				try:
 					producer.send('topic2', value=msg)
-					# insert_row(conn, msg['data'])
+					insert_row(conn, msg['data'])
 					producer.flush()
 				except:
 					sleep(1)
 					producer.send('topic2', value=msg)
-					# insert_row(conn, msg['data'])
+					insert_row(conn, msg['data'])
 					producer.flush()
 	stream.close()
 

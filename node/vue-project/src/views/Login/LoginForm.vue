@@ -58,9 +58,6 @@ onMounted(() => emailElement.value?.focus())
                             v-model.trim="loginForm.email"
                             ref="emailElement"
                              />
-                        <div class="form-text text-danger" v-if="errors.email">
-                            {{ errors.email.join(' ') }}
-                        </div>
 
                     </div>
 
@@ -71,10 +68,9 @@ onMounted(() => emailElement.value?.focus())
                             id="password"
                             class="form-control form-control-lg"
                             v-model.trim="loginForm.password" />
-                        <div class="form-text text-danger" v-if="errors.password">
-                            {{ errors.password.join(' ') }}
-                        </div>
+                        <div class="form-text text-danger" v-if="errMsg">{{ errMsg }}</div>
                     </div>
+
 
                     <button 
                         class="btn btn-outline-light btn-lg px-5" 

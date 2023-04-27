@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Sample middleware that would authenticate API requests
  * by reading Authorization token and extracting user from it
  */
-class ApiAuthMiddleware
+class ApiAuthMiddleware extends Middleware
 {
 
   public function handle(Request $request, Closure $next): Response
@@ -20,11 +20,6 @@ class ApiAuthMiddleware
     $token = $request->header('Authorization');
     if (!$token)
       throw new UnauthorizedException();
-
-    // $userId = $token;
-    // $user = User::find($userId);
-    // if (!$user)
-    //   throw new UnauthorizedException();
 
     $request->setUserResolver(function () use ($user) {
       return $user;
