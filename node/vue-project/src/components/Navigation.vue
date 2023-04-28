@@ -25,8 +25,8 @@ const { isAdmin } = roles()
         </ul>
         </div>
         <div class="logout d-flex flex-row-reverse px-2" v-if="authStore.user">
-            <a href="#" class="nav-link" @click.prevent="authStore.logout">Logout</a>
-            <div>Welcome, ({{ authStore.user.name }})</div>
+            <router-link class="nav-link" to="/" @click.prevent="authStore.logout">Logout</router-link>
+            <div>Welcome, {{ authStore.user.name }} </div>
         </div>
     </div>
     </nav>
@@ -39,5 +39,6 @@ const { isAdmin } = roles()
 
 .logout {
     color:white;
+    gap:20px;
 }
 </style>
