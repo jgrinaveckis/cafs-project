@@ -9,7 +9,6 @@ import { createGlobe } from "../services/globe"
 
 let root: Root;
 const chartdiv = shallowRef();
-let dataMsg = ref();
 const ws = new WebSocket('ws://localhost:3003');
 
 
@@ -49,7 +48,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Navigation></Navigation>
+    <Navigation></Navigation>
     <div class="d-flex justify-content-center">
         <div class="hello" ref="chartdiv"></div>
     </div>
@@ -57,8 +56,8 @@ onMounted(() => {
 
 <style>
 .hello {
-  width: 800px;
-  height: 800px;
+  width: 750px;
+  height: 750px;
   align-items: center;
   display: inline-block;
 }

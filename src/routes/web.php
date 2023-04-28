@@ -2,10 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\LogoutController;
-use App\Http\Controllers\MapController;
 use App\Http\Controllers\RegistrationController;
-use App\Http\Controllers\ConsumerController;
+use App\Http\Middleware\Authenticate;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +19,8 @@ use App\Http\Controllers\ConsumerController;
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegistrationController::class, 'register']);
 
-Route::middleware(['auth'])->group(function () {
-    Route::post('/logout', [LogoutController::class, 'logout']);
-    Route::middleware(['admin'])->group(function () {
-        Route::get('/aggregations', [AggregationsController::class, 'show']);
-    });
-
+Route::middleware([
+    'auth'
+])->group(function () {
+    Route::get('/auth/user', [AuthController::class, 'info']);
 });

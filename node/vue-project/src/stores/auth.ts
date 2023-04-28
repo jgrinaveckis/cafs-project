@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
   // instead of changing isLoggedIn variable value manually
   // we use computed() to track state of httpClient value
   // and change isLoggedIn based on change
-//   const isLoggedIn = computed(() => httpClient.value !== null)
+  const isLoggedIn = computed(() => httpClient.value !== null)
 
   const loadHttpClient = () => {
     const token = window.localStorage.getItem(TOKEN)
@@ -25,6 +25,8 @@ export const useAuthStore = defineStore('auth', () => {
         Authorization: `Bearer ${token}`
       }
     });
+
+    loadUserInfo()
   }
 
     const registerToken = (token: string) => {
@@ -38,6 +40,9 @@ export const useAuthStore = defineStore('auth', () => {
 
     if (token !== null) loadHttpClient()
   }
+
+  const loadUserInfo = () =>
+    httpClient.value?.get('/auth/user').then((res) => (user.value = res.data))
 
   const logout = () => {
     window.localStorage.removeItem(TOKEN)

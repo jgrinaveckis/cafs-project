@@ -11,7 +11,7 @@ onMounted(() => authStore.checkTokenStorage())
 
 <template>
   <Navigation></Navigation>
-    <div class="container pt-4"></div>
+    <div class="container"></div>
   <router-view></router-view>
 </template>
 
