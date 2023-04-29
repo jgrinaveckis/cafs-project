@@ -9,6 +9,7 @@ import logging
 import sys
 import pymysql
 import os
+import datetime
 from json import dumps
 from time import sleep
 from dotenv import load_dotenv
@@ -46,16 +47,14 @@ def create_connection():
 
 def insert_row(connection, data:dict):
 	try:
+		ts = datetime.datetime.now()
+		timestamp = ts.strftime('%Y-%m-%d %H:%M:%S')
 		cursor = connection.cursor()
-		query = f"""
-			INSERT INTO test_leads_insert(ip, iso_state, iso_country, lat, lon, lead_created_at)
-			VALUES("{data['ip']}", "{data['iso_state']}", "{data['iso_country']}", "{data['lat']}", "{data['lon']}", "{data['lead_created_at']}")
-		"""
-		cursor.execute(query)
+		query = "INSERT INTO `test_leads_insert` (`ip`, `iso_state`, `iso_country`, `lat`, `lon`, `lead_created_at`) VALUES(%s, %s, %s, %s, %s, %s)"
+		cursor.execute(query, (data["ip"], data["iso_state"], data["iso_country"], data["lat"], data["lon"], timestamp))
+		connection.commit()
 	except Exception as e:
-		print("Exeception occured:{}".format(e))
-	finally:
-		connection.close()
+		logging.info("Exeception occured: {}".format(e))
 
 
 def create_topic():
@@ -72,7 +71,7 @@ def build_message(binlog_event, row):
 	schema_name = str(getattr(binlog_event, 'schema', ''))
 	tbl_name = str(getattr(binlog_event, 'table', ''))
 	table = {'table': schema_name + "." + tbl_name}
-	if isinstance(binlog_event,WriteRowsEvent) and 'leads' in tbl_name:
+	if isinstance(binlog_event,WriteRowsEvent) and 'test_leads' == tbl_name:
 		event_data = row['values']
 		event_data = {k: event_data.get(k, None) for k in COLUMNS}
 		return {'event':'INSERT', 'table':table, 'data':event_data}
@@ -80,7 +79,6 @@ def build_message(binlog_event, row):
 def send_event():
 	logging.info(f"Creating Kafka producer...")
 
-	# create_topic()
 	conn = create_connection()
 
 	producer = KafkaProducer(
@@ -115,6 +113,8 @@ def send_event():
 					producer.send('topic2', value=msg)
 					insert_row(conn, msg['data'])
 					producer.flush()
+
+	conn.close()
 	stream.close()
 
 if __name__ == "__main__":
