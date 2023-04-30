@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/Login/LoginView.vue'
-import MapView from '../views/MapView.vue'
+import MapView from '../views/App/MapView.vue'
 import About from '../views/AboutView.vue'
-import Aggregations from '../views/AggregationsView.vue'
+import Aggregations from '../views/App/AggregationsView.vue'
 import Register from '../views/Register/RegisterView.vue'
 
 const router = createRouter({
@@ -28,7 +28,9 @@ const router = createRouter({
       path: '/register',
       component: Register
     }
-  ]
+  ],
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active'
 })
 
 export default router

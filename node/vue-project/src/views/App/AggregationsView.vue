@@ -3,10 +3,10 @@
 import * as am5 from '@amcharts/amcharts5';
 import * as am5map from "@amcharts/amcharts5/map";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-import Navigation from '../components/Navigation.vue';
+import Navigation from '../../components/Navigation.vue';
 import { onMounted, ref, shallowRef } from 'vue'
 import type { Root } from "@amcharts/amcharts5";
-import { createGlobe } from "../services/globe"
+import { createGlobe } from "../../services/globe"
 
 let root: Root;
 const chartdiv = shallowRef();
@@ -22,15 +22,15 @@ onMounted(()  => {
 </script>
 <template>
     <Navigation></Navigation>
-    <div class="d-flex justify-content-center">
-        <div class="hello" ref="chartdiv"></div>
+    <div class="d-flex justify-content-center px-2">
+        <div class="aggregations" ref="chartdiv"></div>
     </div>
 
 </template>
 
 <style>
-.hello {
-  width: 800px;
+.aggregations {
+  width: 600px;
   height: 800px;
   align-items: center;
   display: inline-block;

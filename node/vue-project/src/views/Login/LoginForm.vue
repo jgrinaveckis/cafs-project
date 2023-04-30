@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { onMounted, reactive, ref } from 'vue'
 import { useAuthStore } from '../../stores/auth'
-import { useRouter } from 'vue-router'
+import { createRouter, useRouter } from 'vue-router'
 
 const loginForm = reactive({
     email: "",
