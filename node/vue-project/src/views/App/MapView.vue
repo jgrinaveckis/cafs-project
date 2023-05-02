@@ -18,9 +18,6 @@ const router = useRouter()
 
 onMounted(() => {
     authStore.loadUserInfo()
-    console.log("aaa")
-    console.log(authStore.user)
-    console.log(authStore.isLoggedIn)
     root = am5.Root.new(chartdiv.value);
     root.setThemes([am5themes_Animated.new(root)]);
 
@@ -30,36 +27,36 @@ onMounted(() => {
         am5map.MapPointSeries.new(root, {
         })
     );
-    pointSeries.bullets.push(function() {
-    let container = am5.Container.new(root, {});
-    let circle = container.children.push(
-        am5.Circle.new(root, {
-            radius: 4,
-            tooltipY: 0,
-            fill: am5.color(0xff0000),
-            strokeOpacity: 0
-        })
-    );
 
-    circle.animate({
-        key: "scale",
-        from: 0.5,
-        to: 2,
-        duration: 1200,
-        easing: am5.ease.out(am5.ease.cubic),
-        loops: 30
-    });
-    circle.animate({
-        key: "opacity",
-        from: 1,
-        to: 0,
-        duration: 1200,
-        easing: am5.ease.out(am5.ease.cubic),
-        loops: 30
-    });
+    pointSeries.bullets.push(function () {
+        let container = am5.Container.new(root, {});
+        let circle = container.children.push(
+            am5.Circle.new(root, {
+                radius: 4,
+                fill: am5.color(0xff0000),
+                strokeOpacity: 0
+            })
+        );
 
-    return am5.Bullet.new(root, {
-        sprite: container
+        circle.animate({
+            key: "scale",
+            from: 0.5,
+            to: 2,
+            duration: 1200,
+            easing: am5.ease.out(am5.ease.cubic),
+            loops: 30
+        });
+        circle.animate({
+            key: "opacity",
+            from: 1,
+            to: 0,
+            duration: 1200,
+            easing: am5.ease.out(am5.ease.cubic),
+            loops: 30
+        });
+
+        return am5.Bullet.new(root, {
+            sprite: container
         });
     });
 
@@ -73,13 +70,9 @@ onMounted(() => {
 
     ws.onmessage = function message(data) {
         let obj = JSON.parse(data.data);
-        pointSeries.pushDataItem({ latitude: obj.data.lat, longitude: obj.data.lon });
+        console.log(obj);
+        pointSeries.pushDataItem({ latitude: obj.lat, longitude: obj.lon });
     }
-})
-
-computed(() => {
-    
-    console.log(authStore.isLoggedIn)
 })
 
 </script>
@@ -93,9 +86,9 @@ computed(() => {
 
 <style>
 .map {
-  width: 600px;
-  height: 800px;
-  align-items: center;
-  display: inline-block;
+    width: 600px;
+    height: 800px;
+    align-items: center;
+    display: inline-block;
 }
 </style>

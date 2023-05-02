@@ -13,7 +13,7 @@ import datetime
 from json import dumps
 from time import sleep
 from dotenv import load_dotenv
-from pathlib import Path
+from ipapi import getIpJson
 
 # Loading .env file for conn details
 load_dotenv()
@@ -38,7 +38,7 @@ additional_db_settings = {
 	'charset': "utf8mb4"
 }
 
-COLUMNS = ('ip', 'iso_state', "iso_country", "created_at", "lat", "lon", "lead_created_at")
+COLUMNS = ('ip', "lead_created_at")
 
 def create_connection():
 	connectionObject   = pymysql.connect(host=mysql_settings['host'], user=mysql_settings['user'], password=mysql_settings['passwd'],
@@ -50,8 +50,8 @@ def insert_row(connection, data:dict):
 		ts = datetime.datetime.now()
 		timestamp = ts.strftime('%Y-%m-%d %H:%M:%S')
 		cursor = connection.cursor()
-		query = "INSERT INTO `test_leads_insert` (`ip`, `iso_state`, `iso_country`, `lat`, `lon`, `lead_created_at`) VALUES(%s, %s, %s, %s, %s, %s)"
-		cursor.execute(query, (data["ip"], data["iso_state"], data["iso_country"], data["lat"], data["lon"], timestamp))
+		query = "INSERT INTO `leads` (`ip`, `iso_state`, `iso_country`, `country_name`, `city`, `lat`, `lon`, `lead_created_at`, `table`) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+		cursor.execute(query, (data["ip"], data["region"], data["country_code"], data["country_name"], data["city"], data["lat"], data["lon"], timestamp, data["table"]))
 		connection.commit()
 	except Exception as e:
 		logging.info("Exeception occured: {}".format(e))
@@ -65,7 +65,6 @@ def create_topic():
 	topic_list = []
 	topic_list.append(NewTopic(name="topic2", num_partitions=1, replication_factor=1))
 	admin_client.create_topics(new_topics=topic_list, validate_only=False)
-
 
 def build_message(binlog_event, row):
 	schema_name = str(getattr(binlog_event, 'schema', ''))
@@ -104,15 +103,18 @@ def send_event():
 			msg = build_message(event, e_row)
 			if msg:
 				logging.info(f"Table: {msg['table']} received {msg['event']} type of change")
-				try:
-					producer.send('topic2', value=msg)
-					insert_row(conn, msg['data'])
-					producer.flush()
-				except:
-					sleep(1)
-					producer.send('topic2', value=msg)
-					insert_row(conn, msg['data'])
-					producer.flush()
+				encriched_data = getIpJson(msg['data']['ip'])
+				if encriched_data:
+					encriched_data["table"] = msg["table"]["table"]
+					try:
+						producer.send('topic2', value=encriched_data)
+						insert_row(conn, encriched_data)
+						producer.flush()
+					except:
+						sleep(1)
+						producer.send('topic2', value=encriched_data)
+						insert_row(conn, encriched_data)
+						producer.flush()
 
 	conn.close()
 	stream.close()
