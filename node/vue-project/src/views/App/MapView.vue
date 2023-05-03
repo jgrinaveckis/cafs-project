@@ -72,6 +72,11 @@ onMounted(() => {
         let obj = JSON.parse(data.data);
         console.log(obj);
         pointSeries.pushDataItem({ latitude: obj.lat, longitude: obj.lon });
+
+        // check and clear list
+        if (pointSeries.bullets.length > 100) {
+            pointSeries.bullets.clear()
+        }
     }
 })
 

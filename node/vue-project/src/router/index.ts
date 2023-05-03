@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/Login/LoginView.vue'
-import MapView from '../views/App/MapView.vue'
+import Login from '../views/Login/LoginView.vue'
+import Map from '../views/App/MapView.vue'
 import About from '../views/AboutView.vue'
 import Aggregations from '../views/App/AggregationsView.vue'
 import Register from '../views/Register/RegisterView.vue'
@@ -11,11 +11,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: LoginView
-    },
-    {
-      path: '/about',
-      component: About
+      component: Login
     },
     {
       path: '/register',
@@ -27,11 +23,15 @@ const router = createRouter({
       children: [
         {
           path: '/map',
-          component: MapView
+          component: Map
         },
         {
           path: '/aggregations',
           component: Aggregations
+        },
+        {
+          path: '/about',
+          component: About
         },
       ]
     }

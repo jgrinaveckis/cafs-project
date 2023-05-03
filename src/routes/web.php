@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\LeadController;
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CorsMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +27,11 @@ Route::middleware([
     'auth'
 ])->group(function () {
     Route::get('/auth/user', [AuthController::class, 'info']);
+    Route::middleware([
+        AdminMiddleware::class,
+        CorsMiddleware::class
+    ])->group(function () {
+        Route::get('/leads/bycountry', [LeadController::class, 'getCountByCountry']);
+        Route::get('/leads/bystate', [LeadController::class, 'getCountByState']);
+    });
 });
