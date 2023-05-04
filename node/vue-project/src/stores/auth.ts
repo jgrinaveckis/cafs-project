@@ -12,10 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
   const httpClient = ref<AxiosInstance | null>(null)
   const user = ref<IUser | null>(null)
-
-  // instead of changing isLoggedIn variable value manually
-  // we use computed() to track state of httpClient value
-  // and change isLoggedIn based on change
+  const isInitializing = ref(true)
   const isLoggedIn = computed(() => user.value !== null)
 
   const loadHttpClient = (): Promise<any> => {
@@ -38,7 +35,12 @@ export const useAuthStore = defineStore('auth', () => {
 
   const checkTokenStorage = () => {
     const token = window.localStorage.getItem(TOKEN)
-    if (token !== null) loadHttpClient()
+    if (token !== null) {
+      loadHttpClient().then(() => isInitializing.value = false)
+    }
+    else {
+      isInitializing.value = false;
+    }
   }
 
   const loadUserInfo = (): Promise<any> =>
@@ -53,10 +55,12 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/')
   }
 
+
   return {
     httpClient,
     user,
     isLoggedIn,
+    isInitializing,
     registerToken,
     checkTokenStorage,
     logout,

@@ -21,8 +21,8 @@ onMounted(() => {
     root = am5.Root.new(chartdiv.value);
     root.setThemes([am5themes_Animated.new(root)]);
 
-    let globe = createGlobe(root, am5map);
-
+    let glb = createGlobe(root, am5map);
+    let globe = glb[0];
     let pointSeries = globe.series.push(
         am5map.MapPointSeries.new(root, {
         })

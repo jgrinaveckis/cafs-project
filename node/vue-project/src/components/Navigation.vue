@@ -9,36 +9,36 @@ const { isAdmin } = roles()
 
 <template>
     <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <div class="container-fluid option">
-        <router-link class="nav-link px-2" to="/map">LiveOrderMap</router-link>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <router-link class="nav-link" to="/map">Home</router-link>
-            </li>
-            <li class="nav-item" v-if="isAdmin">
-                <router-link class="nav-link" to="/aggregations">Aggregations</router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" to="/about">About</router-link>
-            </li>
-        </ul>
+        <div class="container-fluid option">
+            <router-link class="nav-link px-2" to="/map">LiveOrderMap</router-link>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/map">Home</router-link>
+                    </li>
+                    <li class="nav-item" v-if="isAdmin">
+                        <router-link class="nav-link" to="/aggregations">Aggregations</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/about">About</router-link>
+                    </li>
+                </ul>
+            </div>
+            <div class="logout d-flex flex-row-reverse px-2" v-if="authStore.user">
+                <router-link class="nav-link" to="/" @click.prevent="authStore.logout">Logout</router-link>
+                <div>Welcome, {{ authStore.user.name }} </div>
+            </div>
         </div>
-        <div class="logout d-flex flex-row-reverse px-2" v-if="authStore.user">
-            <router-link class="nav-link" to="/" @click.prevent="authStore.logout">Logout</router-link>
-            <div>Welcome, {{ authStore.user.name }} </div>
-        </div>
-    </div>
     </nav>
 </template>
 
 <style lang="scss">
 .option {
-    color:white;
+    color: white;
 }
 
 .logout {
-    color:white;
-    gap:20px;
+    color: white;
+    gap: 20px;
 }
 </style>

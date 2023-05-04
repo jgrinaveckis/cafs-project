@@ -20,7 +20,7 @@ function createChart(root: Root, am5map: any) {
     );
     return chart;
 }
-function setBackgroundSeries(chart: any, am5map:any, root:Root) {
+function setBackgroundSeries(chart: any, am5map: any, root: Root) {
 
     let backgroundSeries = chart.series.push(
         am5map.MapPolygonSeries.new(root, {})
@@ -38,13 +38,13 @@ function setBackgroundSeries(chart: any, am5map:any, root:Root) {
     return chart;
 };
 
-function setCountriesAndStates(chart: any, am5map:any, root: Root, world: any, states: any) {
+function setCountriesAndStates(chart: any, am5map: any, root: Root, world: any, states: any) {
     // Country series polygon
     let countrySeries = chart.series.push(
         am5map.MapPolygonSeries.new(root, {
-            geoJSON: world 
+            geoJSON: world
         }
-    ));
+        ));
     countrySeries.mapPolygons.template.setAll({
         fill: root.interfaceColors.get("alternativeBackground"),
         fillOpacity: 0.15,
@@ -54,14 +54,14 @@ function setCountriesAndStates(chart: any, am5map:any, root: Root, world: any, s
 
     let stateSeries = chart.series.push(
         am5map.MapPolygonSeries.new(root, {
-            geoJSON: states 
+            geoJSON: states
         }
-    ));
+        ));
     stateSeries.mapPolygons.template.setAll({
         fill: root.interfaceColors.get("alternativeBackground"),
         fillOpacity: 0.05,
         strokeWidth: 0.5,
         stroke: root.interfaceColors.get("background")
     });
-    return chart;
+    return [chart, stateSeries, countrySeries];
 }
