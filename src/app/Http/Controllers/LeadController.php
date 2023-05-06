@@ -16,8 +16,8 @@ class LeadController extends Controller
     }
 
     public function getCountByState() {
-        $leads = Lead::groupby('iso_state')
-        ->select('iso_state', DB::raw('COUNT(*) AS count'))
+        $leads = Lead::groupby('iso_country','iso_state')
+        ->select('iso_country','iso_state', DB::raw('COUNT(*) AS count'))
         ->get();
         return $leads;
     }

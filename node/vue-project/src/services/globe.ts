@@ -42,7 +42,9 @@ function setCountriesAndStates(chart: any, am5map: any, root: Root, world: any, 
     // Country series polygon
     let countrySeries = chart.series.push(
         am5map.MapPolygonSeries.new(root, {
-            geoJSON: world
+            geoJSON: world,
+            valueField: "value",
+            calculateAggregates: true
         }
         ));
     countrySeries.mapPolygons.template.setAll({
@@ -54,7 +56,9 @@ function setCountriesAndStates(chart: any, am5map: any, root: Root, world: any, 
 
     let stateSeries = chart.series.push(
         am5map.MapPolygonSeries.new(root, {
-            geoJSON: states
+            geoJSON: states,
+            valueField: "value",
+            calculateAggregates: true
         }
         ));
     stateSeries.mapPolygons.template.setAll({

@@ -91,7 +91,7 @@ onMounted(() => {
 
 <style>
 .map {
-    width: 600px;
+    width: 100%;
     height: 800px;
     align-items: center;
     display: inline-block;
