@@ -33,5 +33,6 @@ Route::middleware([
     ])->group(function () {
         Route::get('/leads/bycountry', [LeadController::class, 'getCountByCountry']);
         Route::get('/leads/bystate', [LeadController::class, 'getCountByState']);
+        Route::post('/test/insert', [LeadController::class, 'insert']);
     });
 });

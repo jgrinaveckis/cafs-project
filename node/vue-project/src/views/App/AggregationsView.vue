@@ -9,20 +9,18 @@ import type { Root } from "@amcharts/amcharts5";
 import { createGlobe } from "../../services/globe"
 import { useAuthStore } from '@/stores/auth';
 
-let root: Root;
 const chartdiv = shallowRef();
-const ws = new WebSocket('ws://localhost:3003');
 const authStore = useAuthStore();
-let leadsByCountry = ref([]);
-let leadsByState = ref([]);
 const errors = ref({});
 const errMsg = ref<string | null>();
+let root: Root;
+let leadsByCountry = ref([]);
+let leadsByState = ref([]);
 
 onMounted(() => {
     root = am5.Root.new(chartdiv.value);
     root.setThemes([am5themes_Animated.new(root)]);
     let globe = createGlobe(root, am5map);
-    let chart = globe[0];
     let states = globe[1];
     let countries = globe[2];
 
@@ -32,8 +30,8 @@ onMounted(() => {
     countries.set("heatRules", [{
         target: countries.mapPolygons.template,
         dataField: "value",
-        min: am5.color(0xff621f),
-        max: am5.color(0x661f00),
+        min: am5.color(0x661f00),
+        max: am5.color(0xff621f),
         key: "fill"
     }]);
 
@@ -77,7 +75,7 @@ onMounted(() => {
 </script>
 <template>
     <Navigation></Navigation>
-    <div class="d-flex justify-content-center px-2">
+    <div class="d-flex py-2">
         <div class="aggregations" ref="chartdiv"></div>
     </div>
 </template>
@@ -86,7 +84,5 @@ onMounted(() => {
 .aggregations {
     width: 100%;
     height: 800px;
-    align-items: center;
-    display: inline-block;
 }
 </style>

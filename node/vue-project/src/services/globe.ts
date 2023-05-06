@@ -48,8 +48,8 @@ function setCountriesAndStates(chart: any, am5map: any, root: Root, world: any, 
         }
         ));
     countrySeries.mapPolygons.template.setAll({
-        fill: root.interfaceColors.get("alternativeBackground"),
-        fillOpacity: 0.15,
+        // fill: root.interfaceColors.get("alternativeBackground"),
+        fillOpacity: 0.5,
         strokeWidth: 0.5,
         stroke: root.interfaceColors.get("background")
     });
@@ -62,8 +62,8 @@ function setCountriesAndStates(chart: any, am5map: any, root: Root, world: any, 
         }
         ));
     stateSeries.mapPolygons.template.setAll({
-        fill: root.interfaceColors.get("alternativeBackground"),
-        fillOpacity: 0.05,
+        // fill: root.interfaceColors.get("alternativeBackground"),
+        fillOpacity: 0.3,
         strokeWidth: 0.5,
         stroke: root.interfaceColors.get("background")
     });
