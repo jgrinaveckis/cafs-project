@@ -25,7 +25,7 @@ onMounted(() => {
     let countries = globe[2];
 
     countries.mapPolygons.template.setAll({
-        tooltipText: "{id}: {value}"
+        tooltipText: "{name} ({id}): {value} leads"
     });
     countries.set("heatRules", [{
         target: countries.mapPolygons.template,
@@ -36,7 +36,7 @@ onMounted(() => {
     }]);
 
     states.mapPolygons.template.setAll({
-        tooltipText: "{id}: {value}"
+        tooltipText: "{name} ({id}): {value} leads"
     });
     states.set("heatRules", [{
         target: states.mapPolygons.template,

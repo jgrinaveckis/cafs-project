@@ -82,7 +82,7 @@ onMounted(() => {
 <template>
     <Navigation></Navigation>
     <Insert></Insert>
-    <div class="d-flex justify-content-center mt-1">
+    <div class="d-flex justify-content-center mt-1 container">
         <div class="map" ref="chartdiv"></div>
     </div>
 </template>
