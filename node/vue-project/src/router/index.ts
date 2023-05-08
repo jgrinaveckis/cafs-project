@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login/LoginView.vue'
 import Map from '../views/App/MapView.vue'
+import Person from '../views/PersonView.vue'
 import About from '../views/AboutView.vue'
 import Aggregations from '../views/App/AggregationsView.vue'
 import Register from '../views/Register/RegisterView.vue'
@@ -28,6 +29,10 @@ const router = createRouter({
         {
           path: '/aggregations',
           component: Aggregations
+        },
+        {
+          path: '/person',
+          component: Person
         },
         {
           path: '/about',

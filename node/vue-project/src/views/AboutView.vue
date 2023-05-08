@@ -1,23 +1,33 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import Navigation from '../components/Navigation.vue'
-import { useAuthStore } from '../stores/auth'
 
-const authStore = useAuthStore()
-onMounted(() => {
-  authStore.loadUserInfo()
-})
 </script>
 
 <template>
-  <Navigation></Navigation>
-  <div>
-    <h3>Current user</h3>
-      <div>Name: {{ authStore.user?.name }}</div>
-      <div>Email: {{ authStore.user?.email }}</div>
-      <div>Role: {{ authStore.user?.role  }}</div>
-  </div>
+    <Navigation></Navigation>
+    <div class="container">
+        <h3>About</h3>
+        <p>
+            This is Live Order Map project. 
+        </p>
+        <p>
+            If you want to see live orders go to <router-link class="nav-link display-inline" to="/">Home</router-link>
+        </p>
+        <p>
+            If you want to see order aggregations go to <router-link class="nav-link display-inline" to="/aggregations">Aggregations</router-link>
+        </p>
+        <p>
+            If you want to see currently logged in person info press <router-link class="nav-link display-inline" to="/person"><a>here</a></router-link>
+        </p>
+        <p>
+            Source code can be seen in <a href="https://github.com/jgrinaveckis/cafs-project">in Github repo here</a>
+        </p>
+    </div>
 </template>
 
 <style>
+.display-inline {
+    display: inline;
+    font-weight: bold;
+}
 </style>

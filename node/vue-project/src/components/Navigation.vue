@@ -19,14 +19,15 @@ const { isAdmin } = roles()
                     <li class="nav-item" v-if="isAdmin">
                         <router-link class="nav-link" to="/aggregations">Aggregations</router-link>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="isAdmin">
                         <router-link class="nav-link" to="/about">About</router-link>
                     </li>
                 </ul>
             </div>
             <div class="logout d-flex flex-row-reverse px-2" v-if="authStore.user">
                 <router-link class="nav-link" to="/" @click.prevent="authStore.logout">Logout</router-link>
-                <div>Welcome, {{ authStore.user.name }} </div>
+                <router-link class="nav-link" to="/person">Welcome, {{ authStore.user.name }}</router-link>
+                <div> </div>
             </div>
         </div>
     </nav>

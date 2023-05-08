@@ -15,6 +15,4 @@ class Lead extends Model
      * @var string
      */
     protected $table = 'leads';
-
-    
 }

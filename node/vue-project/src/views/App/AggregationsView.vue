@@ -75,9 +75,10 @@ onMounted(() => {
 </script>
 <template>
     <Navigation></Navigation>
-    <div class="d-flex py-2">
+    <div class="d-flex py-2 justify-content-center">
         <div class="aggregations" ref="chartdiv"></div>
     </div>
+
 </template>
 
 <style>
