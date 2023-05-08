@@ -6,10 +6,8 @@ import Navigation from '../components/Navigation.vue'
 <template>
     <Navigation></Navigation>
     <div class="container">
-        <h3>About</h3>
-        <p>
-            This is Live Order Map project. 
-        </p>
+        <h2>About</h2>
+        <h4> This is Live Order Map project </h4>
         <p>
             If you want to see live orders go to <router-link class="nav-link display-inline" to="/">Home</router-link>
         </p>
