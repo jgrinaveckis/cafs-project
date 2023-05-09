@@ -19,7 +19,7 @@ const { isAdmin } = roles()
                     <li class="nav-item" v-if="isAdmin">
                         <router-link class="nav-link" to="/aggregations">Aggregations</router-link>
                     </li>
-                    <li class="nav-item" v-if="isAdmin">
+                    <li class="nav-item">
                         <router-link class="nav-link" to="/about">About</router-link>
                     </li>
                 </ul>

@@ -13,11 +13,11 @@ const { isAdmin } = roles()
         <p>
             If you want to see live orders go to <router-link class="nav-link display-inline" to="/">Home</router-link>
         </p>
-        <p>
+        <p v-if="isAdmin">
             If you want to see order aggregations go to <router-link class="nav-link display-inline"
                 to="/aggregations">Aggregations</router-link>
         </p>
-        <p v-if="isAdmin">
+        <p>
             If you want to see currently logged in person info press <router-link class="nav-link display-inline"
                 to="/person"><a>here</a></router-link>
         </p>

@@ -19,6 +19,10 @@ const router = createRouter({
       component: Register
     },
     {
+      path: '/about',
+      component: About
+    },
+    {
       path: '/auth',
       component: Auth,
       children: [
@@ -33,11 +37,7 @@ const router = createRouter({
         {
           path: '/person',
           component: Person
-        },
-        {
-          path: '/about',
-          component: About
-        },
+        }
       ]
     }
   ],
